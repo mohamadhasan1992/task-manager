@@ -46,8 +46,5 @@ The backend and frontend will be available at their respective ports (see `docke
 
 ## Customization
 
-- Configure environment variables in `.env` files for both backend and frontend as needed.
+- Configure environment variables in `.env` files for frontend and `.env.local` for backend as needed.
 
-## License
-
-MIT
