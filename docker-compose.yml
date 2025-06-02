@@ -1,0 +1,38 @@
+version: '3.7'
+# The backend service uses the ./backend directory as its build context.
+services:
+  task-manager:
+    build:
+      context: ./backend
+      target: development-build-stage
+      dockerfile: Dockerfile
+    container_name: task-manager
+    ports:
+      - '4000:3000'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    restart: 'unless-stopped'
+    networks:
+      - backend
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:5.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongo-data:

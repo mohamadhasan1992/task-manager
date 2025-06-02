@@ -1,0 +1,6 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Check Health
+GET {{ baseURL }}/health-check
