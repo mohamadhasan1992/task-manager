@@ -2,28 +2,30 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Copy package files
 COPY package.json package-lock.json ./
-
-# Install ALL dependencies (including dev) for build
 RUN npm ci
-RUN npm install -g @swc/cli @swc/core
 
+# Copy source code and build
 COPY . .
-
-# Build the app (needs devDependencies like swc)
 RUN npm run build
 
-# Remove dev dependencies for production image
-RUN npm prune --production
-
-FROM node:20-alpine
+# Production stage
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
-COPY --from=builder /app ./
+# Copy package files and install only production deps
+COPY package.json package-lock.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Copy any other necessary files (like .env if needed in production)
+COPY --from=builder /app/.env* ./
 
 EXPOSE 3000
-
 ENV NODE_ENV=production
 
 CMD ["npm", "run", "start:prod"]

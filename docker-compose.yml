@@ -1,16 +1,18 @@
 version: '3.7'
 
+
+
 services:
-  task-manager:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: task-manager-backend
     ports:
       - '4000:3000'
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+    # volumes:
+      # - ./backend:/app
+      # - /app/node_modules
     restart: 'unless-stopped'
     networks:
       - backend
@@ -41,7 +43,7 @@ services:
     networks:
       - backend
     depends_on:
-      - task-manager
+      - backend
 
 networks:
   backend:
