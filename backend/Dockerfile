@@ -1,24 +1,29 @@
-# Common build stage
-FROM node:14.14.0-alpine3.12 as common-build-stage
-
-COPY . ./app
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN npm install
+COPY package.json package-lock.json ./
+
+# Install ALL dependencies (including dev) for build
+RUN npm ci
+RUN npm install -g @swc/cli @swc/core
+
+COPY . .
+
+# Build the app (needs devDependencies like swc)
+RUN npm run build
+
+# Remove dev dependencies for production image
+RUN npm prune --production
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app ./
 
 EXPOSE 3000
 
-# Development build stage
-FROM common-build-stage as development-build-stage
+ENV NODE_ENV=production
 
-ENV NODE_ENV development
-
-CMD ["npm", "run", "dev"]
-
-# Production build stage
-FROM common-build-stage as production-build-stage
-
-ENV NODE_ENV production
-
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:prod"]

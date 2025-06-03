@@ -24,7 +24,7 @@ A fullstack task management application built with modern technologies.
 2. **Create environment variable files:**
     - Copy the example environment files and edit as needed:
       ```bash
-        cp backend/.env.example backend/.env.local
+        cp backend/.env.example backend/.env
         cp frontend/.env.example frontend/.env
       ```
     - Update the `.env` files with your configuration.
@@ -33,6 +33,9 @@ A fullstack task management application built with modern technologies.
     ```bash
     docker-compose up
     ```
+
+  check the forntend at: [https://localhost:3000](https://localhost:3000)
+
 
 The backend and frontend will be available at their respective ports (see `docker-compose.yml`).
 
@@ -45,5 +48,5 @@ The backend and frontend will be available at their respective ports (see `docke
 
 ## Customization
 
-- Configure environment variables in `.env` files for frontend and `.env.local` for backend as needed.
+- Configure environment variables in `.env` files for frontend and `.env` for backend as needed.
 

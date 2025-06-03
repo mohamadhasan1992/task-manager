@@ -1,12 +1,11 @@
 version: '3.7'
-# The backend service uses the ./backend directory as its build context.
+
 services:
   task-manager:
     build:
       context: ./backend
-      target: development-build-stage
       dockerfile: Dockerfile
-    container_name: task-manager
+    container_name: task-manager-backend
     ports:
       - '4000:3000'
     volumes:
@@ -19,6 +18,7 @@ services:
       - mongo
     depends_on:
       - mongo
+
   mongo:
     image: mongo:5.0
     container_name: mongodb
@@ -29,6 +29,19 @@ services:
       - mongo-data:/data/db
     networks:
       - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: task-manager-frontend
+    ports:
+      - '3000:80' # Expose Nginx on host:container
+    restart: unless-stopped
+    networks:
+      - backend
+    depends_on:
+      - task-manager
 
 networks:
   backend:
