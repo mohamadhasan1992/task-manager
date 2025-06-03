@@ -26,7 +26,7 @@ type SideNavigationItem = {
 
 const Logo = () => {
   return (
-    <Link className="flex items-center text-white" to={paths.home.getHref()}>
+    <Link className="flex items-center text-white" to={paths.home.root.getHref()}>
       <img className="h-8 w-auto" src={logo} alt="Workflow" />
       <span className="text-sm font-semibold text-white">
         Task Manager
@@ -81,8 +81,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     onSuccess: () => navigate(paths.auth.login.getHref(location.pathname)),
   });
   const navigation = [
-    { name: 'Dashboard', to: paths.app.dashboard.getHref(), icon: Home },
-    { name: 'Tasks', to: paths.app.tasks.getHref(), icon: Folder },
+    { name: 'Dashboard', to: paths.home.dashboard.getHref(), icon: Home },
+    { name: 'Tasks', to: paths.home.tasks.getHref(), icon: Folder },
   ].filter(Boolean) as SideNavigationItem[];
 
   return (

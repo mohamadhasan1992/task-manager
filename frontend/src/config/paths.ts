@@ -1,9 +1,4 @@
 export const paths = {
-  home: {
-    path: '/',
-    getHref: () => '/app',
-  },
-
   auth: {
     register: {
       path: '/auth/register',
@@ -17,22 +12,22 @@ export const paths = {
     },
   },
 
-  app: {
+  home: {
     root: {
-      path: '/app',
-      getHref: () => '/app',
+      path: '/',
+      getHref: () => '/',
     },
     dashboard: {
-      path: '',
-      getHref: () => '/app',
+      path: '/',
+      getHref: () => '/',
     },
     tasks: {
       path: 'tasks',
-      getHref: () => '/app/tasks',
+      getHref: () => '/tasks',
     },
     task: {
       path: 'tasks/:taskId',
-      getHref: (id: string) => `/app/tasks/${id}`,
+      getHref: (id: string) => `/tasks/${id}`,
     },
   },
 } as const;

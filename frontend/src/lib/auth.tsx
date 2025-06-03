@@ -13,7 +13,7 @@ const getUser = async () => {
     const response = await api.get('/auth/me');
     return response.data
   } catch (error: any) {
-    if (error.response?.status === 404) {
+    if (error.response?.status === 401) {
       return null; // Return null, don't throw
     }
     throw error;
@@ -33,7 +33,7 @@ export const loginInputSchema = z.object({
 export type LoginInput = z.infer<typeof loginInputSchema>;
 const loginWithEmailAndPassword = async(data: LoginInput): Promise<AuthResponse> => {
   const response = await api.post('/auth/login', data);
-  return response.data
+  return response as unknown as AuthResponse
 };
 
 export const registerInputSchema = z
@@ -48,7 +48,7 @@ const registerWithEmailAndPassword = async(
   data: RegisterInput,
 ): Promise<AuthResponse> => {
   const response = await api.post('/auth/signup', data);
-  return response.data
+  return response as unknown as AuthResponse
 };
 
 const authConfig = {
@@ -72,7 +72,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   const location = useLocation();
 
-  if (!user.data) {
+  if (!user.data && !window.location.pathname.includes('/auth/login')) {
     return (
       <Navigate to={paths.auth.login.getHref(location.pathname)} replace />
     );

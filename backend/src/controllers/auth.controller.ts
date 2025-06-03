@@ -10,9 +10,10 @@ class AuthController {
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: CreateUserDto = req.body;
-      await this.authService.signup(userData);
+      const { cookie, user } = await this.authService.signup(userData);
 
-      res.status(201).json({ data: {}, message: 'signuped successfully' });
+      res.setHeader('Set-Cookie', [cookie]);
+      res.status(201).json({ data: {email: user.email}, message: 'signuped successfully' });
     } catch (error) {
       next(error);
     }
@@ -21,10 +22,10 @@ class AuthController {
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: CreateUserDto = req.body;
-      const { cookie, findUser } = await this.authService.login(userData);
+      const { cookie, user } = await this.authService.login(userData);
 
       res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data:findUser, message: 'LoggedIn successfully' });
+      res.status(200).json({ data:user, message: 'LoggedIn successfully' });
     } catch (error) {
       next(error);
     }
@@ -40,7 +41,7 @@ class AuthController {
       const userData: IUserDocument = req.user;
       await this.authService.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
+      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0; Path=/;']);
       res.status(200).json({ data: {}, message: 'loggedOut successfully' });
     } catch (error) {
       next(error);

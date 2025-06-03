@@ -11,7 +11,9 @@ class TasksController {
   public getTasks = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const user= req.user;
+      const query = req.query
       const findAllTasksData = await this.taskService.findAll({
+        ...query,
         user: user._id, 
         populate: {
           path: "user",

@@ -12,7 +12,7 @@ const LoginRoute = () => {
       <LoginForm
         onSuccess={() => {
           navigate(
-            paths.app.dashboard.getHref(),
+            paths.home.dashboard.getHref(),
             {
               replace: true,
             },

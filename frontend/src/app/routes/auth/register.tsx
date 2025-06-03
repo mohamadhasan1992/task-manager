@@ -15,7 +15,7 @@ const RegisterRoute = () => {
       <RegisterForm
         onSuccess={() => {
           navigate(
-            `${redirectTo ? `${redirectTo}` : paths.app.dashboard.getHref()}`,
+            `${redirectTo ? `${redirectTo}` : paths.home.dashboard.getHref()}`,
             {
               replace: true,
             },

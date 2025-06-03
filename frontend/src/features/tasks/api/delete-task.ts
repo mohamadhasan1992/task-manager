@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { api } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
+import { getInfiniteTasksQueryOptions } from './get-tasks';
 
-import { getTasksQueryOptions } from './get-tasks';
 
 export const deleteTask = ({
   taskId,
@@ -27,7 +27,7 @@ export const useDeleteTask = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getTasksQueryOptions().queryKey,
+        queryKey: getInfiniteTasksQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

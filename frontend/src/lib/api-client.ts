@@ -23,25 +23,20 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    
     try{
       const message = error.response?.data?.message || error.message;
+      if (error.response?.status === 401 && !window.location.href?.includes('/auth/login')) {
+        window.location.href = '/auth/login';
+        return
+      }
       useNotifications.getState().addNotification({
         type: 'error',
         title: 'Error',
         message,
       });
-      if (error.response?.status === 401 && !error.config.url?.includes('/auth/me')) {
-          // Optionally redirect to login
-          if (!window.location.pathname.startsWith('/auth')) {
-            window.location.href = '/auth/login';
-          }
-      }
+      
+      
 
-      if (error.response?.status === 401) {
-        window.location.href = paths.auth.login.getHref();
-        return
-      }
       return Promise.reject(error);
     }catch(err){
       return Promise.reject(error);

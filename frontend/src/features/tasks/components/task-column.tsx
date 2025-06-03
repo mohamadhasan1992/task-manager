@@ -13,7 +13,7 @@ export const TaskColumn = ({ title, status, tasks, onTaskPrefetch }: TaskColumnP
   const filteredTasks = tasks.filter(task => task.status === status);
   
   return (
-    <div className="flex-1 bg-gray-50 rounded-lg p-4">
+    <div className="flex-1 bg-card rounded-lg p-4">
       <div className="mb-4">
         <h3 className="font-semibold text-lg text-gray-800 mb-1">{title}</h3>
         <span className="text-sm text-gray-500">{filteredTasks.length} tasks</span>

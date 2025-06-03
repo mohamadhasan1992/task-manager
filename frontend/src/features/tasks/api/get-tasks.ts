@@ -1,15 +1,16 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 
 import { api } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
-import { Task, Pagination } from '@/types/api';
+import { Pagination, Task } from '@/types/api';
 
-export const getTasks = (
+
+export const getTasks = ({
   page = 1,
-): Promise<{
-  data: Task[];
-  pagination: Pagination;
-}> => {
+}: {
+  page?: number;
+}): Promise<{ data: Task[]; pagination: Pagination }> => {
+  console.log("page", page)
   return api.get(`/tasks`, {
     params: {
       page,
@@ -17,28 +18,24 @@ export const getTasks = (
   });
 };
 
-export const getTasksQueryOptions = ({
-  page,
-  sort
-}: { page?: number, sort?: string } = {}) => {
-  return queryOptions({
-    queryKey: page ? ['tasks', { page }] : ['tasks'],
-    queryFn: () => getTasks(page),
+export const getInfiniteTasksQueryOptions = () => {
+  return infiniteQueryOptions({
+    queryKey: ['tasks'],
+    queryFn: ({ pageParam = 1 }) => {
+      return getTasks({ page: pageParam as number });
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.pagination?.hasNextPage) return undefined;
+      const nextPage = (lastPage.pagination.currentPage * 1) + 1;
+      return nextPage;
+    },
+    initialPageParam: 1,
   });
 };
 
-type UseTasksOptions = {
-  page?: number;
-  sort?: string;
-  queryConfig?: QueryConfig<typeof getTasksQueryOptions>;
-};
 
-export const useTasks = ({
-  queryConfig,
-  page,
-}: UseTasksOptions) => {
-  return useQuery({
-    ...getTasksQueryOptions({ page }),
-    ...queryConfig,
+export const useInfiniteTasks = () => {
+  return useInfiniteQuery({
+    ...getInfiniteTasksQueryOptions(),
   });
 };

@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { api } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
 import { Task } from '@/types/api';
+import { getInfiniteTasksQueryOptions } from './get-tasks';
 
-import { getTasksQueryOptions } from './get-tasks';
 
 export const createTaskInputSchema = z.object({
   title: z.string().min(1, 'Required'),
@@ -36,7 +36,7 @@ export const useCreateTask = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getTasksQueryOptions().queryKey,
+        queryKey: getInfiniteTasksQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

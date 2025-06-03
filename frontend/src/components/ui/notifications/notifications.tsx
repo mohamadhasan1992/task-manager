@@ -1,8 +1,18 @@
+import { useEffect, useRef } from 'react';
 import { Notification } from './notification';
 import { useNotifications } from './notifications-store';
 
 export const Notifications = () => {
   const { notifications, dismissNotification } = useNotifications();
+
+  const timeoutIds = useRef<NodeJS.Timeout[]>([]);
+
+  useEffect(() => {
+    // Cleanup timeouts on unmount
+    return () => {
+      timeoutIds.current.forEach(clearTimeout);
+    };
+  }, []);
 
   return (
     <div

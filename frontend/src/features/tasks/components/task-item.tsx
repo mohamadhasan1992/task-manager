@@ -38,7 +38,7 @@ export const TaskItem = ({
     const handleCardClick = () => {
         queryClient.prefetchQuery(getTaskQueryOptions(task._id));
         onTaskPrefetch?.(task._id);
-        window.location.href = paths.app.task.getHref(task._id);
+        window.location.href = paths.home.task.getHref(task._id);
     };
 
     const handleProgressRightClick = () => {
@@ -62,16 +62,19 @@ export const TaskItem = ({
     return (
         <div
             key={task._id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+            className="bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
         >
             <div 
+                className="flex flex-col cursor-pointer"
                 onClick={handleCardClick}
                 tabIndex={0}
                 role="button"
                 onKeyDown={e => {
                     if (e.key === "Enter" || e.key === " ") handleCardClick();
                 }}
-                className="flex justify-between mb-3 cursor-pointer">
+                >
+                <div 
+                    className="flex justify-between mb-3">
                 <h4 className="font-medium text-gray-900 mb-2">
                     {task.title}
                     <span className="text-xs text-gray-400 ml-2">
@@ -83,26 +86,29 @@ export const TaskItem = ({
             <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>{task.user?.email}</span>
             </div>
+            </div>
+            
+            
             <hr className="my-3 border-t border-gray-200" />
             <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>{task.description}</span>
             </div>
             <div className="flex justify-between items-center mt-4">
                 <Button
-                    variant="destructive"
+                    variant="ghost"
                     disabled={task.status == TaskStatusEnum.Pending}
                     size="sm"
                     onClick={handleProgressLeftClick}
                 >
-                    <SquareChevronLeft className="size-4" />
+                    <SquareChevronLeft className="size-5" />
                 </Button>
                 <Button
-                    variant="destructive"
+                    variant="ghost"
                     size="sm"
                     disabled={task.status == TaskStatusEnum.Done}
                     onClick={handleProgressRightClick}
                 >
-                    <SquareChevronRight className="size-4" />
+                    <SquareChevronRight className="size-5" />
                 </Button>
             </div>
         </div>

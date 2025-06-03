@@ -11,7 +11,6 @@ A fullstack task management application built with modern technologies.
 ## Getting Started
 
 ### Prerequisites
-
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ### Usage
@@ -41,7 +40,7 @@ The backend and frontend will be available at their respective ports (see `docke
 
 ```
 /backend   # Express + TypeScript + MongoDB API
-/frontend  # React + Vite + Tailwind CSS + Radix UI
+/frontend  # React + Vite + React-Query + Tailwind CSS + Radix UI
 ```
 
 ## Customization

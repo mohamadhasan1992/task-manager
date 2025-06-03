@@ -46,7 +46,6 @@ export abstract class BaseRepository<T extends Document> {
         delete filter.page    
         delete filter.limit    
         delete filter.skip    
-
         // Get total count for pagination
         const totalItems = await this.model.countDocuments(filter);
         
@@ -160,7 +159,7 @@ export abstract class BaseRepository<T extends Document> {
 
   private calculatePagination(pagination?: FilterQuery<T>) {
     const page = pagination?.page || 1;
-    const limit = pagination?.limit || 10;
+    const limit = pagination?.limit || 20;
     const skip = pagination?.skip !== undefined ? pagination.skip : (page - 1) * limit;
 
     return { page, limit, skip };

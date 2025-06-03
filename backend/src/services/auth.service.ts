@@ -15,18 +15,19 @@ class AuthService {
     this.userRepository = new UserRepository();
   }
 
-  public async signup(userData: CreateUserDto): Promise<IUserDocument> {
+  public async signup(userData: CreateUserDto): Promise<{ cookie: string; user: Partial<IUserDocument> }> {
     if (isEmpty(userData)) throw new HttpException(400, "userData is empty");
 
     const findUser: IUserDocument = await this.userRepository.findByEmail(userData.email );
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
 
     const createUserData: IUserDocument = await this.userRepository.create(userData);
-    return createUserData;
+    const tokenData = this.createToken(createUserData);
+    const cookie = this.createCookie(tokenData);
+    return {cookie, user: createUserData};
   }
 
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: Partial<IUserDocument> }> {
-    console.log("isnide auth service")
+  public async login(userData: CreateUserDto): Promise<{ cookie: string; user: Partial<IUserDocument> }> {
     if (isEmpty(userData)) throw new HttpException(400, "userData is empty");
 
     const findUser: IUserDocument = await this.userRepository.findByEmail(userData.email );
@@ -38,7 +39,7 @@ class AuthService {
     const tokenData = this.createToken(findUser);
     const cookie = this.createCookie(tokenData);
 
-    return { cookie, findUser:{email: findUser.email} };
+    return { cookie, user:{email: findUser.email} };
   }
 
   public async logout(userData: IUserDocument): Promise<IUserDocument> {

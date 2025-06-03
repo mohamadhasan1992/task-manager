@@ -9,7 +9,7 @@ import { ProtectedRoute } from '@/lib/auth';
 import {
   default as AppRoot,
   ErrorBoundary as AppRootErrorBoundary,
-} from './routes/app/root';
+} from './routes/home/root';
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -32,7 +32,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import('./routes/auth/login').then(convert(queryClient)),
     },
     {
-      path: paths.app.root.path,
+      path: paths.home.root.path,
       element: (
         <ProtectedRoute>
           <AppRoot />
@@ -41,23 +41,23 @@ export const createAppRouter = (queryClient: QueryClient) =>
       ErrorBoundary: AppRootErrorBoundary,
       children: [
         {
-          path: paths.app.tasks.path,
+          path: paths.home.tasks.path,
           lazy: () =>
-            import('./routes/app/tasks/tasks').then(
+            import('./routes/home/tasks/tasks').then(
               convert(queryClient),
             ),
         },
         {
-          path: paths.app.task.path,
+          path: paths.home.task.path,
           lazy: () =>
-            import('./routes/app/tasks/task').then(
+            import('./routes/home/tasks/task').then(
               convert(queryClient),
             ),
         },
         {
-          path: paths.app.dashboard.path,
+          path: '',
           lazy: () =>
-            import('./routes/app/dashboard').then(convert(queryClient)),
+            import('./routes/home/dashboard').then(convert(queryClient)),
         },
       ],
     },

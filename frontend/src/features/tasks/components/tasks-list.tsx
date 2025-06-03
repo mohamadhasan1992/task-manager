@@ -1,10 +1,9 @@
-import { useSearchParams } from 'react-router';
-
 import { Spinner } from '@/components/ui/spinner';
-import { useTasks } from '../api/get-tasks';
 
 import { TaskStatusEnum } from '@/enums/task-status.enum';
 import { TaskColumn } from './task-column';
+import { useInfiniteTasks } from '../api/get-tasks';
+import { useEffect, useRef } from 'react';
 
 export type TasksListProps = {
   onTaskPrefetch?: (id: string) => void;
@@ -12,12 +11,28 @@ export type TasksListProps = {
 
 
 export const TasksList = ({ onTaskPrefetch }: TasksListProps) => {
-  const [searchParams] = useSearchParams();
+  const tasksQuery = useInfiniteTasks();
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const tasksQuery = useTasks({
-    page: +(searchParams.get('page') || 1),
-  });
-  
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    if (!tasksQuery.hasNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && tasksQuery.hasNextPage && !tasksQuery.isFetchingNextPage) {
+          tasksQuery.fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [tasksQuery.hasNextPage, tasksQuery.isFetchingNextPage]);
 
   if (tasksQuery.isLoading) {
     return (
@@ -27,11 +42,10 @@ export const TasksList = ({ onTaskPrefetch }: TasksListProps) => {
     );
   }
 
-  const tasks = tasksQuery.data?.data;
-  const pagination = tasksQuery.data?.pagination;
+  const tasks = tasksQuery.data?.pages.flatMap((page) => page.data);;
 
   if (!tasks) return null;
-
+  
   return (
     <div className="w-full">
       <div className="flex gap-6 min-h-[600px]">
@@ -56,15 +70,12 @@ export const TasksList = ({ onTaskPrefetch }: TasksListProps) => {
           onTaskPrefetch={onTaskPrefetch}
         />
       </div>
-
-      {/* Pagination (if needed) */}
-      {pagination && pagination.totalPages > 1 && (
-        <div className="mt-6 flex justify-center">
-          <div className="text-sm text-gray-500">
-            Page {pagination.currentPage} of {pagination.totalPages}
+      <div ref={loadMoreRef} style={{ height: 1 }} />
+        {tasksQuery.isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <Spinner size="md" />
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };
