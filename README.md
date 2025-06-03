@@ -28,6 +28,32 @@ A fullstack task management application built with modern technologies.
         cp frontend/.env.example frontend/.env
       ```
     - Update the `.env` files with your configuration.
+    for backend
+    ```bash
+      # PORT
+      PORT =3000
+
+      # DATABASE
+      DB_HOST = mongo
+      DB_PORT = 27017
+      DB_DATABASE = taskManager
+
+      # TOKEN
+      SECRET_KEY = secretkeyrandomlygenerated
+
+      # LOG
+      LOG_FORMAT = dev
+      LOG_DIR = ../logs
+
+      # CORS
+      ORIGIN = http://localhost:3000
+      CREDENTIALS = true
+    ```
+    for frontend
+    ```bashe
+      VITE_APP_API_URL=http://localhost:4000
+      VITE_APP_ENABLE_API_MOCKING=false
+    ```
 
 3. **Start the application with Docker Compose:**
     ```bash
