@@ -60,7 +60,7 @@ A fullstack task management application built with modern technologies.
     docker compose up
     ```
 
-  check the forntend at: [https://localhost:3000](https://localhost:3000)
+  check the forntend at: [http://localhost:3000](http://localhost:3000)
 
 
 The backend and frontend will be available at their respective ports (see `docker-compose.yml`).
