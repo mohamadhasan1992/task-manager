@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
-
 import { api } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
 import { Task } from '@/types/api';
 import { getInfiniteTasksQueryOptions } from './get-tasks';
+import { TaskStatusEnum } from '@/enums/task-status.enum';
+
 
 
 export const createTaskInputSchema = z.object({
@@ -36,7 +37,11 @@ export const useCreateTask = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getInfiniteTasksQueryOptions().queryKey,
+        queryKey: [
+          getInfiniteTasksQueryOptions(TaskStatusEnum.Pending).queryKey,
+          getInfiniteTasksQueryOptions(TaskStatusEnum.InProgress).queryKey,
+          getInfiniteTasksQueryOptions(TaskStatusEnum.Done).queryKey,
+        ],
       });
       onSuccess?.(...args);
     },

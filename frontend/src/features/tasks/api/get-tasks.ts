@@ -3,26 +3,30 @@ import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
 import { Pagination, Task } from '@/types/api';
+import { TaskStatusEnum } from '@/enums/task-status.enum';
+
 
 
 export const getTasks = ({
   page = 1,
+  status
 }: {
   page?: number;
+  status: TaskStatusEnum
 }): Promise<{ data: Task[]; pagination: Pagination }> => {
-  console.log("page", page)
   return api.get(`/tasks`, {
     params: {
       page,
+      status
     },
   });
 };
 
-export const getInfiniteTasksQueryOptions = () => {
+export const getInfiniteTasksQueryOptions = (status: TaskStatusEnum) => {
   return infiniteQueryOptions({
-    queryKey: ['tasks'],
-    queryFn: ({ pageParam = 1 }) => {
-      return getTasks({ page: pageParam as number });
+    queryKey: ['tasks', status],
+    queryFn: ({ pageParam = 1, }) => {
+      return getTasks({ page: pageParam as number, status });
     },
     getNextPageParam: (lastPage) => {
       if (!lastPage?.pagination?.hasNextPage) return undefined;
@@ -34,8 +38,8 @@ export const getInfiniteTasksQueryOptions = () => {
 };
 
 
-export const useInfiniteTasks = () => {
+export const useInfiniteTasks = (status: TaskStatusEnum) => {
   return useInfiniteQuery({
-    ...getInfiniteTasksQueryOptions(),
+    ...getInfiniteTasksQueryOptions(status),
   });
 };

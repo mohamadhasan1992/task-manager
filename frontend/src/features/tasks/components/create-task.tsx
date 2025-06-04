@@ -13,7 +13,7 @@ export const CreateTask = () => {
       onSuccess: () => {
         addNotification({
           type: 'success',
-          title: 'Tas Created',
+          title: 'Task Created',
         });
       },
     },
