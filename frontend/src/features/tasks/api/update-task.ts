@@ -5,7 +5,8 @@ import { api } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
 import { Task } from '@/types/api';
 
-import { getTaskQueryOptions } from './get-task';
+import { TaskStatusEnum } from '@/enums/task-status.enum';
+import { getInfiniteTasksQueryOptions } from './get-tasks';
 
 
 
@@ -43,8 +44,14 @@ export const useUpdateTask = ({
 
   return useMutation({
     onSuccess: (data, ...args) => {
-      queryClient.refetchQueries({
-        queryKey: getTaskQueryOptions(data._id).queryKey,
+      [
+        TaskStatusEnum.Pending,
+        TaskStatusEnum.InProgress,
+        TaskStatusEnum.Done,
+      ].forEach(status => {
+        queryClient.invalidateQueries({
+          queryKey: getInfiniteTasksQueryOptions(status).queryKey,
+        });
       });
       onSuccess?.(data, ...args);
     },

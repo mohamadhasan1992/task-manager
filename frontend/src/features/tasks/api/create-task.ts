@@ -36,12 +36,14 @@ export const useCreateTask = ({
 
   return useMutation({
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          getInfiniteTasksQueryOptions(TaskStatusEnum.Pending).queryKey,
-          getInfiniteTasksQueryOptions(TaskStatusEnum.InProgress).queryKey,
-          getInfiniteTasksQueryOptions(TaskStatusEnum.Done).queryKey,
-        ],
+      [
+        TaskStatusEnum.Pending,
+        TaskStatusEnum.InProgress,
+        TaskStatusEnum.Done,
+      ].forEach(status => {
+        queryClient.invalidateQueries({
+          queryKey: getInfiniteTasksQueryOptions(status).queryKey,
+        });
       });
       onSuccess?.(...args);
     },

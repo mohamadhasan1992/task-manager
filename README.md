@@ -18,7 +18,7 @@ A fullstack task management application built with modern technologies.
 1. **Clone the repository:**
     ```bash
     git clone git@github.com:mohamadhasan1992/task-manager.git
-    cd taskManager
+    cd task-manager
     ```
 
 2. **Create environment variable files:**

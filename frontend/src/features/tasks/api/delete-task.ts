@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
 import { getInfiniteTasksQueryOptions } from './get-tasks';
+import { TaskStatusEnum } from '@/enums/task-status.enum';
 
 
 export const deleteTask = ({
@@ -26,8 +27,14 @@ export const useDeleteTask = ({
 
   return useMutation({
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({
-        queryKey: getInfiniteTasksQueryOptions().queryKey,
+      [
+        TaskStatusEnum.Pending,
+        TaskStatusEnum.InProgress,
+        TaskStatusEnum.Done,
+      ].forEach(status => {
+        queryClient.invalidateQueries({
+          queryKey: getInfiniteTasksQueryOptions(status).queryKey,
+        });
       });
       onSuccess?.(...args);
     },
