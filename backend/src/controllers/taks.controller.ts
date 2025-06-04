@@ -48,6 +48,16 @@ class TasksController {
     }
   };
 
+  public createManyTasks = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try{
+      const user = req.user;
+      await this.taskService.createMany(user._id.toString())
+      res.status(201).json({ data: {}, message: 'Many tasks created successfully!' });
+    }catch(err){
+      next(err)
+    }
+  }
+
   public createTask = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const user= req.user

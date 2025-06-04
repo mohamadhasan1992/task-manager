@@ -18,6 +18,14 @@ export abstract class BaseRepository<T extends Document> {
     }
   }
 
+  async createMany(data: Partial<T>[]): Promise<T[]> {
+    try {
+      return await this.model.insertMany(data);
+    } catch (error) {
+      throw this.handleError(error, 'CREATE_MANY');
+    }
+  }
+
   // Read operations
   async findById(id: string, options?: Omit<FilterQuery<T>, 'pagination'>): Promise<T | null> {
     try {

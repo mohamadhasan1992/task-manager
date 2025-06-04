@@ -5,6 +5,9 @@ import { TaskRepository } from '@/respositories/task.repository';
 import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
 import { FilterQuery } from 'mongoose';
+import taskSeederData from "../seeder/tasks.json"
+import { TaskStatusEnum } from '@/enum/task-status.enum';
+
 
 class TasksService {
   private taskRepository: TaskRepository;
@@ -40,6 +43,18 @@ class TasksService {
 
     return createTaskData;
   }
+
+  public async createMany(userId: string){
+    const tasks = taskSeederData.taskList;
+
+    const tasksWithUser = tasks.map(task => ({
+      ...task,
+      status: task.status as unknown as TaskStatusEnum,
+      user: userId,
+    }));
+
+    return await this.taskRepository.createMany(tasksWithUser);
+  } 
 
   public async update(filterQuery: FilterQuery<ITaskDocument>, taskData: Partial<CreateTaskDto>): Promise<ITaskDocument> {
     if (isEmpty(taskData)) throw new HttpException(400, "taskData is empty");
