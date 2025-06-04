@@ -64,7 +64,6 @@ export abstract class BaseRepository<T extends Document> {
         query = this.applyQueryOptions(query, queryOptions);
         query = query.skip(skip).limit(limit);
         
-
         const data = await query.exec();
 
         return this.buildPaginatedResult(data, page, limit, totalItems);
@@ -183,7 +182,6 @@ export abstract class BaseRepository<T extends Document> {
         sortObj[key] = -1;
       }
     });
-
     return sortObj;
   }
 

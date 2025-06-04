@@ -19,7 +19,8 @@ class TasksController {
           path: "user",
           model: "User",
           select: "email"
-        }
+        },
+        sort: {"createdAt": -1}
       });
 
       res.status(200).json(findAllTasksData);
