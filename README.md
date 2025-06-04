@@ -57,7 +57,7 @@ A fullstack task management application built with modern technologies.
 
 3. **Start the application with Docker Compose:**
     ```bash
-    docker-compose up
+    docker compose up
     ```
 
   check the forntend at: [https://localhost:3000](https://localhost:3000)
